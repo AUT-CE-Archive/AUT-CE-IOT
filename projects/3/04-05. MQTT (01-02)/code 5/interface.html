@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IoT Interface</title>
+    <style>
+        .outer {
+            display: table;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .middle {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .inner {
+            margin-left: auto;
+            margin-right: auto;
+            width: 400px;
+            align-items: center;
+            align-content: center;
+        }
+    </style>
+
+    <script>
+        function updateSlider(slideAmount) {
+            var sliderDiv = document.getElementById("slider");
+            document.getElementById("slider-value").innerHTML = slideAmount;
+        }
+
+        function updateButton(buttonValue) {
+            var buttonDiv = document.getElementById("buttons");
+            document.getElementById("buttons-value").innerHTML = buttonValue;
+        }
+
+        function submit(submitValue) {
+            temperature = document.getElementById("buttons-value").innerHTML;
+            brightness = document.getElementById("slider-value").innerHTML;
+            
+            // Post request to server
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "http://localhost:8000/update", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+            xhttp.send(JSON.stringify({
+                "temperature": temperature,
+                "brightness": brightness
+            }));
+        }
+
+    </script>
+</head>
+<body>
+    <div class="outer">
+        <div class="middle">
+          <div class="inner">
+            <!-- Horizontal Slider -->
+            <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="50" class="slider" id="slider" onchange="updateSlider(this.value)" />
+            <p>Brightness: <span id="slider-value"></span></p>
+
+            <!-- Temperature Buttons -->
+            <button type="button" onclick="updateButton('cold')">Cold</button>
+            <button type="button" onclick="updateButton('medium')">Medium</button>
+            <button type="button" onclick="updateButton('hot')">Hot</button>
+            <p>Temperature: <span id="buttons-value"></span></p>
+
+            <!-- Submit button -->
+            <button type="button" onclick="submit('submit')">Submit</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
